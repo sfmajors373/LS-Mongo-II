@@ -11,20 +11,45 @@ server.use(bodyParser.json());
 
 // TODO: write your route handlers here
 
-//GET /accepted-answer/:soID
+const sendUserError = (err, res) => {
+  res.status(STATUS_USER_ERROR);
+  if (typeof err === 'string') {
+    res.json({ error: err });
+  } else {
+    res.json(err);
+  }
+};
+
+// GET /accepted-answer/:soID
 server.get('/accepted-answer/:soID', (req, res) => {
   const { soID } = req.params;
-  Posts.findOne({})
-    .where('soID')
-    .equals(soID)
-    .exec((err, posts) => {
-      if (err) {
-        res.status(STATUS_SERVER_ERROR);
-	res.json({ error: err });
-      } else {
-
+  Posts.findOne({ soID })
+    .exec((err, post) => {
+      if (!post) {
+        sendUserError(err, res);
+        return;
       }
+      Posts.findOne({ soID: post.acceptedAnswerID })
+        .exec((error, answer) => {
+          if (!answer) {
+            sendUserError(error, res);
+            return;
+          }
+          res.json(answer);
+        });
     });
 });
+
+//   Posts.findOne({})
+//     .where('soID')
+//     .equals(soID)
+//     .exec((err, posts) => {
+//       if (err) {
+//         res.status(STATUS_SERVER_ERROR);
+//         res.json({ error: err });
+//       // } else {
+//       }
+//     });
+// });
 
 module.exports = { server };

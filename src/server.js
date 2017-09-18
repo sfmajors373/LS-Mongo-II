@@ -96,23 +96,5 @@ server.get('/npm-answers', (req, res) => {
       if (!post) {
         sendUserError(err, res);
       } else {
-        res.json(post);
-      }
-    });
-  });
-//     const answers = [];
-//     tagged.forEach((id) => {
-//       Post.find({ parentID: id })
-//       .exec((err44, apost) => {
-//         console.log('CALLEDEEDDD!!!!?');
-//         console.log(apost);
-//         answers.push(apost);
-//       });
-//     });
-//     console.log(answers);
-//     res.json(answers);
-//   });
-});
-
 module.exports = { server };
 
